@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<identities> <!-- identities is the root element or the "document element" -->
+    <identity id="1"> <!-- id is one attribute -->
+        <displayName>thomas</displayName>
+<!-- thomas is the textcontent of the displayName tag -->
+        <uid><![CDATA[abc>def<123]]></uid>
+        <email>tbr@tbr.com</email>
+    </identity>
+    <identity id="2"> <!-- id is one attribute -->
+        <displayName>quentin</displayName>
+<!-- quentin is the textcontent of the displayName tag -->
+        <uid><![CDATA[abc>def<456]]></uid>
+        <email>qdc@qdc.com</email>
+    </identity>
+
+
+<identity>
+<displayName>Cécile Morin</displayName>
+<email>cmor@cmor.com</email>
+<uid>789</uid>
+</identity>
+</identities>
