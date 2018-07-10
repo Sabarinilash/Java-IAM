@@ -1,110 +1,100 @@
-/**
- * Ce fichier est la propriété de Thomas BROUSSARD Code application : Composant :
- */
 package fr.epita.iam.launcher;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Scanner;
 
 import fr.epita.iam.datamodel.Identity;
 import fr.epita.iam.exceptions.EntityCreationException;
+import fr.epita.iam.exceptions.EntityDeletionException;
 import fr.epita.iam.exceptions.EntitySearchException;
+import fr.epita.iam.exceptions.EntityUpdateException;
 import fr.epita.iam.services.identity.IdentityDAO;
 import fr.epita.iam.services.identity.IdentityDAOFactory;
+import fr.epita.iam.services.identity.IdentityJDBCDAO;
 import fr.epita.iam.ui.ConsoleOperations;
 
-/**
- * <h3>Description</h3>
- * <p>
- * This class allows to ...
- * </p>
- *
- * <h3>Usage</h3>
- * <p>
- * This class should be used as follows:
- *
- * <pre>
- * <code>${type_name} instance = new ${type_name}();</code>
- * </pre>
- * </p>
- *
- * @since $${version}
- * @see See also $${link}
- * @author ${user}
- *
- *         ${tags}
- */
 public class Launcher {
 
-	/**
-	 *
-	 * <h3>Description</h3>
-	 * <p>
-	 * This methods allows to ...
-	 * </p>
-	 *
-	 * <h3>Usage</h3>
-	 * <p>
-	 * It should be used as follows :
-	 *
-	 * <pre>
-	 * <code> ${enclosing_type} sample;
-	 *
-	 * //...
-	 *
-	 * sample.${enclosing_method}();
-	 *</code>
-	 * </pre>
-	 * </p>
-	 *
-	 * @since $${version}
-	 * @see Voir aussi $${link}
-	 * @author ${user}
-	 *
-	 *         ${tags}
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// initialize resources
 		IdentityDAO dao = null;
 		try {
 			dao = IdentityDAOFactory.getDAO();
+			
 		} catch (final Exception e) {
-			// TODO log
+			System.out.println(e.getMessage());
 
 			return;
 		}
 		final ConsoleOperations console = new ConsoleOperations();
 		// Welcome
+		System.out.println("Identity Access Management DataBase");
+
 		// Authentication
+
+		console.authenticatingUser();
 
 		// Menu
 
-		// Create
-		final Identity identity = console.readIdentityFromConsole();
-		try {
-			dao.create(identity);
-		} catch (final EntityCreationException ece) {
-			System.out.println(ece.getMessage());
-		}
-		// Search?
-		final Identity criteria = console.readCriteriaFromConsole();
-		List<Identity> resultList;
-		try {
-			resultList = dao.search(criteria);
-			console.displayIdentitiesInConsole(resultList);
-		} catch (final EntitySearchException e) {
-			System.out.println(e.getMessage());
-		}
+		Scanner menu = new Scanner(System.in);
+		String Dashboard = menu.nextLine();
 
+		switch (Dashboard) {
+		// Create
+		case "1":
+
+			final Identity identity = console.readIdentityFromConsole();
+			try {
+				dao.create(identity);
+				
+			} catch (final EntityCreationException ece) {
+				System.out.println(ece.getMessage());
+
+			}
+			break;
+		// Search?
+		case "2":
+			final Identity criteria = console.readCriteriaFromConsole();
+			List<Identity> resultList;
+			try {
+				resultList = dao.search(criteria);
+				console.displayIdentitiesInConsole(resultList);
+			} catch (final EntitySearchException e) {
+				System.out.println(e.getMessage());
+			}
+			break;
 
 		// Update
+		case "3":
+			try {
+				final Identity userUpdate = console.readUserFromConsoletoUpdate();
 
+				dao.update(userUpdate);
+			} catch (EntityUpdateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
 		// Delete
-		console.releaseResources();
+		case "4":
+			
+			try {
+				final Identity userDelete = console.readFromConsoleToDelete();
+				dao.delete(userDelete);
+			} catch (EntityDeletionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		
+		default:
+			console.releaseResources();
 
+			break;
+		}
 	}
-
 }

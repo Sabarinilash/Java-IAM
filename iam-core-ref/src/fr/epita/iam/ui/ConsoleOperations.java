@@ -1,8 +1,4 @@
-/**
- * Ce fichier est la propriété de Thomas BROUSSARD
- * Code application :
- * Composant :
- */
+
 package fr.epita.iam.ui;
 
 import java.util.List;
@@ -10,27 +6,32 @@ import java.util.Scanner;
 
 import fr.epita.iam.datamodel.Identity;
 
-/**
- * <h3>Description</h3>
- * <p>This class allows to ...</p>
- *
- * <h3>Usage</h3>
- * <p>This class should be used as follows:
- *   <pre><code>${type_name} instance = new ${type_name}();</code></pre>
- * </p>
- *
- * @since $${version}
- * @see See also $${link}
- * @author ${user}
- *
- * ${tags}
- */
 public class ConsoleOperations {
 
 	private final Scanner scanner;
 
 	public ConsoleOperations() {
 		scanner = new Scanner(System.in);
+	}
+
+	public void authenticatingUser() {
+		System.out.println("\nEnter User Name: ");
+		String userName = scanner.nextLine();
+		System.out.println("Enter Password: ");
+		String passWord = scanner.nextLine();
+		if (userName.equals("admin") && passWord.equals("test")) {
+			System.out.println("logged Sucessfully ");
+
+			System.out.println("1 Create");
+			System.out.println("2 Search");
+			System.out.println("3 Update");
+			System.out.println("4 Delete");
+
+		} else {
+			System.out.println("Login Failed !");
+
+		}
+
 	}
 
 	public Identity readIdentityFromConsole() {
@@ -44,6 +45,7 @@ public class ConsoleOperations {
 		System.out.println("please input uid");
 		line = scanner.nextLine();
 		identity.setUid(line);
+		
 		return identity;
 	}
 
@@ -56,7 +58,36 @@ public class ConsoleOperations {
 		System.out.println("please input the criterion for email");
 		line = scanner.nextLine();
 		identity.setEmail(line);
+		System.out.println("Created Sucessfully");
+		
+		return identity;
+	}
 
+	
+
+	public Identity readUserFromConsoletoUpdate() {
+
+		final Identity identity = new Identity();
+		System.out.println("please input uid");
+		String line = scanner.nextLine();
+		identity.setUid(line);
+		System.out.println("please input the display name : ");
+		line = scanner.nextLine();
+		identity.setDisplayName(line);
+		System.out.println("please input the for email");
+		line = scanner.nextLine();
+		identity.setEmail(line);
+		
+		
+		return identity;
+	}
+
+	public Identity readFromConsoleToDelete() {
+		final Identity identity = new Identity();
+		System.out.println("select the user name: ");
+		String userName = scanner.nextLine();
+		identity.setDisplayName(userName);
+		
 		return identity;
 	}
 
@@ -65,6 +96,7 @@ public class ConsoleOperations {
 		for (final Identity identity : identities) {
 			System.out.print(i++);
 			System.out.println(" - " + identity);
+			
 		}
 	}
 

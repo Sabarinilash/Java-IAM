@@ -1,6 +1,3 @@
-/**
- * Ce fichier est la propriété de Thomas BROUSSARD Code application : Composant :
- */
 package fr.epita.iam.services.identity;
 
 import java.io.Serializable;
@@ -14,6 +11,8 @@ import java.util.List;
 
 import fr.epita.iam.datamodel.Identity;
 import fr.epita.iam.exceptions.EntityCreationException;
+import fr.epita.iam.exceptions.EntityDeletionException;
+import fr.epita.iam.exceptions.EntityUpdateException;
 import fr.epita.iam.services.conf.ConfKey;
 import fr.epita.iam.services.conf.ConfigurationService;
 
@@ -37,8 +36,9 @@ import fr.epita.iam.services.conf.ConfigurationService;
  * @author ${user}
  *
  *         ${tags}
+ * @param <PreparedStament>
  */
-public class IdentityJDBCDAO implements IdentityDAO {
+public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 
 	static {
 		IdentityDAOFactoryDynamicRegistration.registeredDAOs.put(ConfKey.DB_BACKEND.getKey(), new IdentityJDBCDAO());
@@ -65,19 +65,21 @@ public class IdentityJDBCDAO implements IdentityDAO {
 			connection = getConnection();
 			final PreparedStatement pstmt = connection
 					.prepareStatement(ConfigurationService.getProperty(ConfKey.IDENTITY_INSERT_QUERY));
-
 			pstmt.setString(1, identity.getDisplayName());
 			pstmt.setString(2, identity.getEmail());
 			pstmt.setString(3, identity.getUid());
 			pstmt.execute();
+			System.out.println("Created Sucessfully ");
+			
 			pstmt.close();
+			System.out.println("\nClosed Your Session.!");
 			connection.close();
 		} catch (final SQLException e) {
 			if (connection != null) {
 				try {
 					connection.close();
 				} catch (final SQLException e1) {
-
+					System.out.println(e1.getMessage());
 				}
 			}
 			final EntityCreationException exception = new EntityCreationException(identity, e);
@@ -86,13 +88,73 @@ public class IdentityJDBCDAO implements IdentityDAO {
 	}
 
 	@Override
-	public void delete(Identity identity) {
+	public void update(Identity identity) throws EntityUpdateException {
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			PreparedStatement stmts = connection.prepareStatement(
+					"SELECT * FROM IDENTITIES WHERE IDENTITY_UID=?");
+			stmts.setString(1,identity.getUid());
+			final ResultSet result = stmts.executeQuery();
+		
+			if(result.next()){
+			PreparedStatement pstmt = connection.prepareStatement(
+					"UPDATE IDENTITIES SET IDENTITY_DISPLAYNAME=?, IDENTITY_EMAIL=? where identity_uid=?");
 
+			pstmt.setString(1, identity.getDisplayName());
+			pstmt.setString(2, identity.getEmail());
+			pstmt.setString(3, identity.getUid());
+			pstmt.executeUpdate();
+			System.out.println("Updated " + identity.getDisplayName() + "Sucesfully ");
+			
+			connection.close();
+			System.out.println("\nClosed Your Session.!");
+			} else
+			{
+				System.out.println(identity.getUid() + "Not Found !!");
+			} 
+		}catch (final SQLException e) {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			System.out.println(identity.getDisplayName() + "Failed" + e.toString());
+			EntityUpdateException exception = new EntityUpdateException();
+		}
 	}
 
 	@Override
-	public void update(Identity identity) {
-
+	public void delete(Identity identity) throws EntityDeletionException {
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			PreparedStatement stmt = connection
+					.prepareStatement("Select * from IDENTITIES where IDENTITY_DISPLAYNAME=?");
+			stmt.setString(1, identity.getDisplayName());
+			ResultSet result = stmt.executeQuery();
+			if (result.next()) {
+				stmt = connection.prepareStatement("Delete from IDENTITIES where IDENTITY_DISPLAYNAME=?");
+				stmt.setString(1, identity.getDisplayName());
+				stmt.executeUpdate();
+				System.out.println(identity.getDisplayName() + " deleted from Identity table");
+				connection.close();
+				System.out.println("\nClosed Your Session.!");
+			} else {
+				System.out.println(identity.getDisplayName() + " not found !!");
+			}
+		} catch (final SQLException e) {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (final SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -126,12 +188,13 @@ public class IdentityJDBCDAO implements IdentityDAO {
 
 			pstmt.close();
 			connection.close();
+			
 		} catch (final SQLException e) {
 			if (connection != null) {
 				try {
 					connection.close();
 				} catch (final SQLException e2) {
-					// TODO handle
+					System.out.println(e2.getMessage());
 				}
 			}
 		}
@@ -140,6 +203,7 @@ public class IdentityJDBCDAO implements IdentityDAO {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see fr.epita.iam.services.IdentityDAO#healthCheck()
 	 */
 	@Override
@@ -149,7 +213,7 @@ public class IdentityJDBCDAO implements IdentityDAO {
 			connection.close();
 			return true;
 		} catch (final SQLException sqle) {
-			// TODO log
+			System.out.println(sqle.getMessage());
 
 		}
 		return false;

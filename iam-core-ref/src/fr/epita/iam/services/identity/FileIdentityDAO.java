@@ -89,44 +89,24 @@ public class FileIdentityDAO implements IdentityDAO {
 		return list;
 	}
 
-	/**
-	 * <h3>Description</h3>
-	 * <p>
-	 * This methods allows to ...
-	 * </p>
-	 *
-	 * <h3>Usage</h3>
-	 * <p>
-	 * It should be used as follows :
-	 *
-	 * <pre>
-	 * <code> ${enclosing_type} sample;
-	 *
-	 * //...
-	 *
-	 * sample.${enclosing_method}();
-	 *</code>
-	 * </pre>
-	 * </p>
-	 *
-	 * @since $${version}
-	 * @see Voir aussi $${link}
-	 * @author ${user}
-	 *
-	 *         ${tags}
-	 */
+	
 	private boolean matchString(String current, String expected) {
 		return current.contains(expected);
 	}
 
 	@Override
 	public void update(Identity identity) {
-
+		writer.println("---");
+		writer.println(identity.getDisplayName());
+		writer.println(identity.getEmail());
+		writer.println(identity.getUid());
+		writer.println("---");
+		writer.flush();
 	}
 
 	@Override
 	public void delete(Identity identity) {
-
+		
 	}
 
 	private static PrintWriter initializePrintWriter(final File file) throws IOException, FileNotFoundException {
