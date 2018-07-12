@@ -18,10 +18,12 @@ import fr.epita.iam.ui.ConsoleOperations;
 
 public class Launcher {
 
-	@SuppressWarnings("resource")
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	
+	public static void  main(String[] args) throws FileNotFoundException, IOException {
 		// initialize resources
 		IdentityDAO dao = null;
+		
+		
 		try {
 			dao = IdentityDAOFactory.getDAO();
 			
@@ -39,11 +41,13 @@ public class Launcher {
 		console.authenticatingUser();
 
 		// Menu
-
+		
 		Scanner menu = new Scanner(System.in);
 		String Dashboard = menu.nextLine();
-
-		switch (Dashboard) {
+		
+		switch (Dashboard) 
+		
+		{
 		// Create
 		case "1":
 
@@ -51,9 +55,10 @@ public class Launcher {
 			try {
 				dao.create(identity);
 				
+				
 			} catch (final EntityCreationException ece) {
 				System.out.println(ece.getMessage());
-
+				console.cont();
 			}
 			break;
 		// Search?
@@ -63,6 +68,7 @@ public class Launcher {
 			try {
 				resultList = dao.search(criteria);
 				console.displayIdentitiesInConsole(resultList);
+				console.cont();
 			} catch (final EntitySearchException e) {
 				System.out.println(e.getMessage());
 			}
@@ -74,6 +80,7 @@ public class Launcher {
 				final Identity userUpdate = console.readUserFromConsoletoUpdate();
 
 				dao.update(userUpdate);
+				console.cont();
 			} catch (EntityUpdateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,16 +92,23 @@ public class Launcher {
 			try {
 				final Identity userDelete = console.readFromConsoleToDelete();
 				dao.delete(userDelete);
+				console.cont();
 			} catch (EntityDeletionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
-		
-		default:
+			
+		case "5":
+			
 			console.releaseResources();
-
+			System.out.println("Exited");
+			
+			
+		default :
+			System.out.println("");
 			break;
 		}
 	}
 }
+

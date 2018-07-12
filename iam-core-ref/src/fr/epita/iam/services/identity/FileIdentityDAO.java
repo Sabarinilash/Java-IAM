@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.function.BiPredicate;
 
 import fr.epita.iam.datamodel.Identity;
+import fr.epita.iam.ui.ConsoleOperations;
 
 public class FileIdentityDAO implements IdentityDAO {
 
@@ -38,6 +39,7 @@ public class FileIdentityDAO implements IdentityDAO {
 
 	private final PrintWriter writer;
 	private final Scanner scanner;
+	
 
 	private final BiPredicate<Identity, Identity> searchFilter;
 	//
@@ -66,6 +68,7 @@ public class FileIdentityDAO implements IdentityDAO {
 		writer.println(identity.getUid());
 		writer.println("---");
 		writer.flush();
+		
 	}
 
 	@Override

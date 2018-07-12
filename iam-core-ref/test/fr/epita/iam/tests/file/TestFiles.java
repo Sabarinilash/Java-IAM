@@ -3,7 +3,7 @@
 // * Code application :
 // * Composant :
 // */
-///*
+//
 //package fr.epita.iam.tests.file;
 //
 //import java.io.File;

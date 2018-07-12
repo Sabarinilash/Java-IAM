@@ -15,29 +15,8 @@ import fr.epita.iam.exceptions.EntityDeletionException;
 import fr.epita.iam.exceptions.EntityUpdateException;
 import fr.epita.iam.services.conf.ConfKey;
 import fr.epita.iam.services.conf.ConfigurationService;
+import fr.epita.iam.ui.ConsoleOperations;
 
-/**
- * <h3>Description</h3>
- * <p>
- * This class allows to ...
- * </p>
- *
- * <h3>Usage</h3>
- * <p>
- * This class should be used as follows:
- *
- * <pre>
- * <code>${type_name} instance = new ${type_name}();</code>
- * </pre>
- * </p>
- *
- * @since $${version}
- * @see See also $${link}
- * @author ${user}
- *
- *         ${tags}
- * @param <PreparedStament>
- */
 public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 
 	static {
@@ -55,6 +34,7 @@ public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 
 				ConfigurationService.getProperty(ConfKey.DB_PASSWORD));
 		return connection;
+		// ConsoleOperations menu = new ConsoleOperations(); 
 
 	}
 
@@ -69,10 +49,10 @@ public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 			pstmt.setString(2, identity.getEmail());
 			pstmt.setString(3, identity.getUid());
 			pstmt.execute();
-			System.out.println("Created Sucessfully ");
+			
 			
 			pstmt.close();
-			System.out.println("\nClosed Your Session.!");
+			
 			connection.close();
 		} catch (final SQLException e) {
 			if (connection != null) {
@@ -105,10 +85,10 @@ public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 			pstmt.setString(2, identity.getEmail());
 			pstmt.setString(3, identity.getUid());
 			pstmt.executeUpdate();
-			System.out.println("Updated " + identity.getDisplayName() + "Sucesfully ");
+			System.out.println("Updated " + identity.getDisplayName() + " Sucesfully ");
 			
 			connection.close();
-			System.out.println("\nClosed Your Session.!");
+			
 			} else
 			{
 				System.out.println(identity.getUid() + "Not Found !!");
@@ -142,7 +122,6 @@ public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 				stmt.executeUpdate();
 				System.out.println(identity.getDisplayName() + " deleted from Identity table");
 				connection.close();
-				System.out.println("\nClosed Your Session.!");
 			} else {
 				System.out.println(identity.getDisplayName() + " not found !!");
 			}
