@@ -1,0 +1,10 @@
+fr.epita.iam.datamodel
+fr.epita.iam.exceptions
+fr.epita.iam.launcher
+fr.epita.iam.services
+fr.epita.iam.services.conf
+fr.epita.iam.services.identity
+fr.epita.iam.tests.db
+fr.epita.iam.tests.properties
+fr.epita.iam.tests.xml
+fr.epita.iam.ui
