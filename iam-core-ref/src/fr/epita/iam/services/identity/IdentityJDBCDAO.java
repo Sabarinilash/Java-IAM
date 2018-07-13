@@ -34,7 +34,7 @@ public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 
 				ConfigurationService.getProperty(ConfKey.DB_PASSWORD));
 		return connection;
-		// ConsoleOperations menu = new ConsoleOperations(); 
+		
 
 	}
 
@@ -72,14 +72,12 @@ public class IdentityJDBCDAO<PreparedStament> implements IdentityDAO {
 		Connection connection = null;
 		try {
 			connection = getConnection();
-			PreparedStatement stmts = connection.prepareStatement(
-					"SELECT * FROM IDENTITIES WHERE IDENTITY_UID=?");
+			PreparedStatement stmts = connection.prepareStatement("SELECT * FROM IDENTITIES WHERE IDENTITY_UID=?");
 			stmts.setString(1,identity.getUid());
 			final ResultSet result = stmts.executeQuery();
 		
 			if(result.next()){
-			PreparedStatement pstmt = connection.prepareStatement(
-					"UPDATE IDENTITIES SET IDENTITY_DISPLAYNAME=?, IDENTITY_EMAIL=? where identity_uid=?");
+			PreparedStatement pstmt = connection.prepareStatement("UPDATE IDENTITIES SET IDENTITY_DISPLAYNAME=?, IDENTITY_EMAIL=? where identity_uid=?");
 
 			pstmt.setString(1, identity.getDisplayName());
 			pstmt.setString(2, identity.getEmail());
